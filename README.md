@@ -55,6 +55,7 @@ The related documentation and instructions are [here](hadoop-connector-examples)
 | [`anomaly-detection`](scenarios/anomaly-detection) | A Flink streaming application for detecting anomalous input patterns using a finite-state machine. | [Java](scenarios/anomaly-detection/src/main/java/io/pravega/anomalydetection)
 | [`pravega-flink-connector-sql-samples`](scenarios/pravega-flink-connector-sql-samples) | Flink connector table api/sql samples. | [Java](scenarios/pravega-flink-connector-sql-samples/src/main/java/io/pravega/connectors.nytaxi)
 | [`pravega-video-demo`](scenarios/pravega-video-demo) | A sample application demonstrates how to write and read video in a Pravega stream. | [Java](/scenarios/pravega-video-demo/src/main/java/io/pravega/example/video/videodemo)
+| [`mqtt-pravega-bridge`](mqtt-pravega-bridge) | A sample application reads events from MQTT and writes them to a Pravega stream. | [Java](scenarios/mqtt-pravega-bridge/src/main/java/com/dell/mqtt/pravega)
 
 
 # Build Instructions

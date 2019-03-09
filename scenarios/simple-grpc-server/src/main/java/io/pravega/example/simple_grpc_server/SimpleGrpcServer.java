@@ -98,6 +98,7 @@ public class SimpleGrpcServer {
       try (ReaderGroupManager readerGroupManager = ReaderGroupManager.withScope(scope, controllerURI)) {
         readerGroupManager.createReaderGroup(readerGroup, readerGroupConfig);
       }
+      String message = "no message";
 
       try (ClientFactory clientFactory = ClientFactory.withScope(scope, controllerURI);
            EventStreamReader<String> reader = clientFactory.createReader("reader",
@@ -111,6 +112,7 @@ public class SimpleGrpcServer {
             event = reader.readNextEvent(READER_TIMEOUT_MS);
             if (event.getEvent() != null) {
               System.out.format("Read event '%s'%n", event.getEvent());
+              message = event.getEvent();
             }
           } catch (ReinitializationRequiredException e) {
             //There are certain circumstances where the reader needs to be reinitialized
@@ -120,7 +122,7 @@ public class SimpleGrpcServer {
         System.out.format("No more events from %s/%s%n", scope, streamName);
       }
 
-      Test1Reply reply = Test1Reply.newBuilder().setMessage("Hello " + req.getName()).build();
+      Test1Reply reply = Test1Reply.newBuilder().setMessage("Hello " + req.getName() + ", message=" + message).build();
       responseObserver.onNext(reply);
       responseObserver.onCompleted();
     }

@@ -16,6 +16,7 @@ repositories {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+mainClassName = "io.pravega.example.simple_grpc_server.SimpleGrpcServer"
 
 ext {
     junitVersion = '4.12'
@@ -28,19 +29,20 @@ dependencies {
     compile "ch.qos.logback:logback-core:1.2.3"
     compile "net.logstash.logback:logstash-logback-encoder:4.11"
 
-    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
-    implementation "io.grpc:grpc-stub:${grpcVersion}"
-    compileOnly "javax.annotation:javax.annotation-api:1.2"
-
-    runtimeOnly "io.grpc:grpc-netty-shaded:${grpcVersion}"
-
-    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
-    testImplementation "junit:junit:4.12"
-    testImplementation "org.mockito:mockito-core:1.9.5"
+//    testImplementation "io.grpc:grpc-testing:${grpcVersion}"
+    testImplementation group: 'junit', name :'junit', version: junitVersion
+//    testImplementation "org.mockito:mockito-core:1.9.5"
 
     compile "io.pravega:pravega-client:${pravegaVersion}",
             "io.pravega:pravega-common:${pravegaVersion}",
             "commons-cli:commons-cli:${commonsCLIVersion}"
+
+    compile group: 'io.netty', name: 'netty-all', version: nettyVersion
+    compile "io.grpc:grpc-netty:" + grpcVersion
+    compile "io.grpc:grpc-auth:" + grpcVersion
+    compile "io.grpc:grpc-protobuf:" + grpcVersion
+    compile "io.grpc:grpc-stub:" + grpcVersion
+    compile group: 'io.netty', name: 'netty-tcnative-boringssl-static', version: nettyBoringSSLVersion
 }
 
 protobuf {

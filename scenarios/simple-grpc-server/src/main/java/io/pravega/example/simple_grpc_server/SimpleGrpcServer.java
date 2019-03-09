@@ -1,5 +1,6 @@
 package io.pravega.example.simple_grpc_server;
 
+import com.google.protobuf.ByteString;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import io.grpc.stub.StreamObserver;
@@ -7,11 +8,13 @@ import io.pravega.client.ClientFactory;
 import io.pravega.client.admin.ReaderGroupManager;
 import io.pravega.client.admin.StreamManager;
 import io.pravega.client.stream.*;
+import io.pravega.client.stream.impl.ByteBufferSerializer;
 import io.pravega.client.stream.impl.JavaSerializer;
 import io.pravega.client.stream.impl.UTF8StringSerializer;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.ByteBuffer;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,8 +85,7 @@ public class SimpleGrpcServer {
             final int READER_TIMEOUT_MS = 2000;
             final String scope = "examples";
             final String streamName = "helloStream";
-            final String uriString = "tcp://192.168.1.126:9090";
-            final URI controllerURI = URI.create(uriString);
+            final URI controllerURI = Parameters.getControllerURI();
 
             StreamManager streamManager = StreamManager.create(controllerURI);
 
@@ -164,8 +166,7 @@ public class SimpleGrpcServer {
             final int READER_TIMEOUT_MS = 2000;
             final String scope = "examples";
             final String streamName = "helloStream";
-            final String uriString = "tcp://192.168.1.126:9090";
-            final URI controllerURI = URI.create(uriString);
+            final URI controllerURI = Parameters.getControllerURI();
 
             StreamManager streamManager = StreamManager.create(controllerURI);
 
@@ -212,10 +213,9 @@ public class SimpleGrpcServer {
         @Override
         public void readEvents(ReadEventsRequest req, StreamObserver<ReadEventsResponse> responseObserver) {
             final int READER_TIMEOUT_MS = 2000;
+            final URI controllerURI = Parameters.getControllerURI();
             final String scope = req.getScope();
             final String streamName = req.getStream();
-            final String uriString = "tcp://192.168.1.126:9090";
-            final URI controllerURI = URI.create(uriString);
 
             StreamManager streamManager = StreamManager.create(controllerURI);
             streamManager.createScope(scope);
@@ -233,14 +233,14 @@ public class SimpleGrpcServer {
             }
 
             try (ClientFactory clientFactory = ClientFactory.withScope(scope, controllerURI);
-                 EventStreamReader<String> reader = clientFactory.createReader("reader",
+                 EventStreamReader<ByteBuffer> reader = clientFactory.createReader("reader",
                          readerGroup,
-                         new UTF8StringSerializer(),
+                         new ByteBufferSerializer(),
                          ReaderConfig.builder().build())) {
                 System.out.format("Reading all the events from %s/%s%n", scope, streamName);
                 for (; ; ) {
                     try {
-                        EventRead<String> event = reader.readNextEvent(READER_TIMEOUT_MS);
+                        EventRead<ByteBuffer> event = reader.readNextEvent(READER_TIMEOUT_MS);
                         if (event.isCheckpoint()) {
                             ReadEventsResponse response = ReadEventsResponse.newBuilder()
                                     .setCheckpointName(event.getCheckpointName())
@@ -249,7 +249,7 @@ public class SimpleGrpcServer {
                             responseObserver.onNext(response);
                         } else if (event.getEvent() != null) {
                             ReadEventsResponse response = ReadEventsResponse.newBuilder()
-                                    .setEvent(event.getEvent())
+                                    .setEvent(ByteString.copyFrom(event.getEvent()))
                                     .setPosition(event.getPosition().toString())
                                     .setEventPointer(event.getEventPointer().toString())
                                     .build();
@@ -275,10 +275,9 @@ public class SimpleGrpcServer {
                 @Override
                 public void onNext(WriteEventsRequest req) {
                     logger.info("writeEvents: req=" + req.toString());
+                    final URI controllerURI = Parameters.getControllerURI();
                     final String scope = req.getScope();
                     final String streamName = req.getStream();
-                    final String uriString = "tcp://192.168.1.126:9090";
-                    final URI controllerURI = URI.create(uriString);
 
                     StreamManager streamManager = StreamManager.create(controllerURI);
                     streamManager.createScope(scope);
@@ -288,11 +287,11 @@ public class SimpleGrpcServer {
                     streamManager.createStream(scope, streamName, streamConfig);
 
                     try (ClientFactory clientFactory = ClientFactory.withScope(scope, controllerURI);
-                         EventStreamWriter<String> writer = clientFactory.createEventWriter(
+                         EventStreamWriter<ByteBuffer> writer = clientFactory.createEventWriter(
                                  streamName,
-                                 new UTF8StringSerializer(),
+                                 new ByteBufferSerializer(),
                                  EventWriterConfig.builder().build())) {
-                        writer.writeEvent(req.getRoutingKey(), req.getEvent());
+                        writer.writeEvent(req.getRoutingKey(), req.getEvent().asReadOnlyByteBuffer());
                     }
                 }
 

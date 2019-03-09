@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='pravega_simple_grpc_server',
   syntax='proto3',
   serialized_options=_b('\n%io.pravega.example.simple_grpc_serverB\025SimpleGrpcServerProtoP\001\242\002\004PSGS'),
-  serialized_pb=_b('\n\x16SimpleGrpcServer.proto\x12\x1apravega_simple_grpc_server\"\x1c\n\x0cTest1Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nTest1Reply\x12\x0f\n\x07message\x18\x01 \x01(\t\"2\n\x11ReadEventsRequest\x12\r\n\x05scope\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\"e\n\x12ReadEventsResponse\x12\r\n\x05\x65vent\x18\x01 \x01(\t\x12\x10\n\x08position\x18\x02 \x01(\t\x12\x15\n\revent_pointer\x18\x03 \x01(\t\x12\x17\n\x0f\x63heckpoint_name\x18\x04 \x01(\t\"W\n\x12WriteEventsRequest\x12\r\n\x05scope\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\x12\x13\n\x0brouting_key\x18\x03 \x01(\t\x12\r\n\x05\x65vent\x18\x04 \x01(\t\"\x15\n\x13WriteEventsResponse2\xef\x04\n\x10SimpleGrpcServer\x12[\n\x05Test1\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x12[\n\x05Test2\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x12]\n\x05Test3\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x30\x01\x12]\n\x05Test4\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x30\x01\x12o\n\nReadEvents\x12-.pravega_simple_grpc_server.ReadEventsRequest\x1a..pravega_simple_grpc_server.ReadEventsResponse\"\x00\x30\x01\x12r\n\x0bWriteEvents\x12..pravega_simple_grpc_server.WriteEventsRequest\x1a/.pravega_simple_grpc_server.WriteEventsResponse\"\x00(\x01\x42G\n%io.pravega.example.simple_grpc_serverB\x15SimpleGrpcServerProtoP\x01\xa2\x02\x04PSGSb\x06proto3')
+  serialized_pb=_b('\n\x16SimpleGrpcServer.proto\x12\x1apravega_simple_grpc_server\"\x1c\n\x0cTest1Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nTest1Reply\x12\x0f\n\x07message\x18\x01 \x01(\t\"2\n\x11ReadEventsRequest\x12\r\n\x05scope\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\"e\n\x12ReadEventsResponse\x12\r\n\x05\x65vent\x18\x01 \x01(\x0c\x12\x10\n\x08position\x18\x02 \x01(\t\x12\x15\n\revent_pointer\x18\x03 \x01(\t\x12\x17\n\x0f\x63heckpoint_name\x18\x04 \x01(\t\"W\n\x12WriteEventsRequest\x12\r\n\x05\x65vent\x18\x01 \x01(\x0c\x12\r\n\x05scope\x18\x02 \x01(\t\x12\x0e\n\x06stream\x18\x03 \x01(\t\x12\x13\n\x0brouting_key\x18\x04 \x01(\t\"\x15\n\x13WriteEventsResponse2\xef\x04\n\x10SimpleGrpcServer\x12[\n\x05Test1\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x12[\n\x05Test2\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x12]\n\x05Test3\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x30\x01\x12]\n\x05Test4\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x30\x01\x12o\n\nReadEvents\x12-.pravega_simple_grpc_server.ReadEventsRequest\x1a..pravega_simple_grpc_server.ReadEventsResponse\"\x00\x30\x01\x12r\n\x0bWriteEvents\x12..pravega_simple_grpc_server.WriteEventsRequest\x1a/.pravega_simple_grpc_server.WriteEventsResponse\"\x00(\x01\x42G\n%io.pravega.example.simple_grpc_serverB\x15SimpleGrpcServerProtoP\x01\xa2\x02\x04PSGSb\x06proto3')
 )
 
 
@@ -134,8 +134,8 @@ _READEVENTSRESPONSE = _descriptor.Descriptor(
   fields=[
     _descriptor.FieldDescriptor(
       name='event', full_name='pravega_simple_grpc_server.ReadEventsResponse.event', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -185,28 +185,28 @@ _WRITEEVENTSREQUEST = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='scope', full_name='pravega_simple_grpc_server.WriteEventsRequest.scope', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
+      name='event', full_name='pravega_simple_grpc_server.WriteEventsRequest.event', index=0,
+      number=1, type=12, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b(""),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='stream', full_name='pravega_simple_grpc_server.WriteEventsRequest.stream', index=1,
+      name='scope', full_name='pravega_simple_grpc_server.WriteEventsRequest.scope', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='routing_key', full_name='pravega_simple_grpc_server.WriteEventsRequest.routing_key', index=2,
+      name='stream', full_name='pravega_simple_grpc_server.WriteEventsRequest.stream', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='event', full_name='pravega_simple_grpc_server.WriteEventsRequest.event', index=3,
+      name='routing_key', full_name='pravega_simple_grpc_server.WriteEventsRequest.routing_key', index=3,
       number=4, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,

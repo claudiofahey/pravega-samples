@@ -30,7 +30,7 @@ message ReadEventsRequest {
 }
 
 message ReadEventsResponse {
-  string event = 1;
+  bytes event = 1;
   string position = 2;
   string event_pointer = 3;
   // Empty string if this is not a checkpoint.
@@ -38,10 +38,10 @@ message ReadEventsResponse {
 }
 
 message WriteEventsRequest {
-  string scope = 1;
-  string stream = 2;
-  string routing_key = 3;
-  string event = 4;
+  bytes event = 1;
+  string scope = 2;
+  string stream = 3;
+  string routing_key = 4;
 }
 
 message WriteEventsResponse {

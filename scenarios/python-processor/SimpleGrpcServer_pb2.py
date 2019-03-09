@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='pravega_simple_grpc_server',
   syntax='proto3',
   serialized_options=_b('\n%io.pravega.example.simple_grpc_serverB\025SimpleGrpcServerProtoP\001\242\002\004PSGS'),
-  serialized_pb=_b('\n\x16SimpleGrpcServer.proto\x12\x1apravega_simple_grpc_server\"\x1c\n\x0cTest1Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nTest1Reply\x12\x0f\n\x07message\x18\x01 \x01(\t2\xcc\x01\n\x10SimpleGrpcServer\x12[\n\x05Test1\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x12[\n\x05Test2\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x42G\n%io.pravega.example.simple_grpc_serverB\x15SimpleGrpcServerProtoP\x01\xa2\x02\x04PSGSb\x06proto3')
+  serialized_pb=_b('\n\x16SimpleGrpcServer.proto\x12\x1apravega_simple_grpc_server\"\x1c\n\x0cTest1Request\x12\x0c\n\x04name\x18\x01 \x01(\t\"\x1d\n\nTest1Reply\x12\x0f\n\x07message\x18\x01 \x01(\t2\x8a\x03\n\x10SimpleGrpcServer\x12[\n\x05Test1\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x12[\n\x05Test2\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x12]\n\x05Test3\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x30\x01\x12]\n\x05Test4\x12(.pravega_simple_grpc_server.Test1Request\x1a&.pravega_simple_grpc_server.Test1Reply\"\x00\x30\x01\x42G\n%io.pravega.example.simple_grpc_serverB\x15SimpleGrpcServerProtoP\x01\xa2\x02\x04PSGSb\x06proto3')
 )
 
 
@@ -114,7 +114,7 @@ _SIMPLEGRPCSERVER = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   serialized_start=116,
-  serialized_end=320,
+  serialized_end=510,
   methods=[
   _descriptor.MethodDescriptor(
     name='Test1',
@@ -129,6 +129,24 @@ _SIMPLEGRPCSERVER = _descriptor.ServiceDescriptor(
     name='Test2',
     full_name='pravega_simple_grpc_server.SimpleGrpcServer.Test2',
     index=1,
+    containing_service=None,
+    input_type=_TEST1REQUEST,
+    output_type=_TEST1REPLY,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='Test3',
+    full_name='pravega_simple_grpc_server.SimpleGrpcServer.Test3',
+    index=2,
+    containing_service=None,
+    input_type=_TEST1REQUEST,
+    output_type=_TEST1REPLY,
+    serialized_options=None,
+  ),
+  _descriptor.MethodDescriptor(
+    name='Test4',
+    full_name='pravega_simple_grpc_server.SimpleGrpcServer.Test4',
+    index=3,
     containing_service=None,
     input_type=_TEST1REQUEST,
     output_type=_TEST1REPLY,

@@ -12,10 +12,18 @@ import SimpleGrpcServer_pb2_grpc
 def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = SimpleGrpcServer_pb2_grpc.SimpleGrpcServerStub(channel)
-        response = stub.Test1(SimpleGrpcServer_pb2.Test1Request(name='you'))
+
+        response = stub.Test1(SimpleGrpcServer_pb2.Test1Request(name='Test1Me'))
         print("Greeter client received: " + response.message)
-        response = stub.Test2(SimpleGrpcServer_pb2.Test1Request(name='you'))
-        print("Test2 response: " + response.message)
+
+        # response = stub.Test2(SimpleGrpcServer_pb2.Test1Request(name='Test2Me'))
+        # print("Test2 response: " + response.message)
+
+        for streaming_response in stub.Test3(SimpleGrpcServer_pb2.Test1Request(name='Test3Me')):
+            print('Test3 response: ' + str(streaming_response))
+
+        for streaming_response in stub.Test4(SimpleGrpcServer_pb2.Test1Request(name='Test4Me')):
+            print('Test4 response: ' + str(streaming_response))
 
 
 if __name__ == '__main__':

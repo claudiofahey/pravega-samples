@@ -9,6 +9,7 @@ package pravega_simple_grpc_server;
 
 service SimpleGrpcServer {
   rpc Test1 (Test1Request) returns (Test1Reply) {}
+  rpc Test2 (Test1Request) returns (Test1Reply) {}
 }
 
 message Test1Request {

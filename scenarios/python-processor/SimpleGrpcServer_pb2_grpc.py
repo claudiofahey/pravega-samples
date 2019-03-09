@@ -19,6 +19,11 @@ class SimpleGrpcServerStub(object):
         request_serializer=SimpleGrpcServer__pb2.Test1Request.SerializeToString,
         response_deserializer=SimpleGrpcServer__pb2.Test1Reply.FromString,
         )
+    self.Test2 = channel.unary_unary(
+        '/pravega_simple_grpc_server.SimpleGrpcServer/Test2',
+        request_serializer=SimpleGrpcServer__pb2.Test1Request.SerializeToString,
+        response_deserializer=SimpleGrpcServer__pb2.Test1Reply.FromString,
+        )
 
 
 class SimpleGrpcServerServicer(object):
@@ -32,11 +37,23 @@ class SimpleGrpcServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def Test2(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_SimpleGrpcServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
       'Test1': grpc.unary_unary_rpc_method_handler(
           servicer.Test1,
+          request_deserializer=SimpleGrpcServer__pb2.Test1Request.FromString,
+          response_serializer=SimpleGrpcServer__pb2.Test1Reply.SerializeToString,
+      ),
+      'Test2': grpc.unary_unary_rpc_method_handler(
+          servicer.Test2,
           request_deserializer=SimpleGrpcServer__pb2.Test1Request.FromString,
           response_serializer=SimpleGrpcServer__pb2.Test1Reply.SerializeToString,
       ),

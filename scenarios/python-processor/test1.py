@@ -13,7 +13,9 @@ def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = SimpleGrpcServer_pb2_grpc.SimpleGrpcServerStub(channel)
         response = stub.Test1(SimpleGrpcServer_pb2.Test1Request(name='you'))
-    print("Greeter client received: " + response.message)
+        print("Greeter client received: " + response.message)
+        response = stub.Test2(SimpleGrpcServer_pb2.Test1Request(name='you'))
+        print("Test2 response: " + response.message)
 
 
 if __name__ == '__main__':

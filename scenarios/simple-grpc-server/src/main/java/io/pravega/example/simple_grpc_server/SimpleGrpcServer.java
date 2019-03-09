@@ -79,7 +79,7 @@ public class SimpleGrpcServer {
 
       final int READER_TIMEOUT_MS = 2000;
       final String scope = "examples";
-      final String streamName = "simple-grpc-server-test2";
+      final String streamName = "helloStream";
       final String uriString = "tcp://192.168.1.126:9090";
       final URI controllerURI = URI.create(uriString);
 

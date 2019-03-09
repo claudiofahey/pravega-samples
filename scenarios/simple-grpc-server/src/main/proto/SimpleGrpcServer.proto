@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.pravega.example.simple_grpc_server";
+option java_outer_classname = "SimpleGrpcServerProto";
+option objc_class_prefix = "PSGS";
+
+package pravega_simple_grpc_server;
+
+service SimpleGrpcServer {
+  rpc Test1 (Test1Request) returns (Test1Reply) {}
+}
+
+message Test1Request {
+  string name = 1;
+}
+
+message Test1Reply {
+  string message = 1;
+}

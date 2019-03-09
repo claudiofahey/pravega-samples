@@ -12,6 +12,8 @@ service SimpleGrpcServer {
   rpc Test2 (Test1Request) returns (Test1Reply) {}
   rpc Test3 (Test1Request) returns (stream Test1Reply) {}
   rpc Test4 (Test1Request) returns (stream Test1Reply) {}
+  rpc ReadEvents (ReadEventsRequest) returns (stream ReadEventsResponse) {}
+  rpc WriteEvents (stream WriteEventsRequest) returns (WriteEventsResponse) {}
 }
 
 message Test1Request {
@@ -20,4 +22,27 @@ message Test1Request {
 
 message Test1Reply {
   string message = 1;
+}
+
+message ReadEventsRequest {
+  string scope = 1;
+  string stream = 2;
+}
+
+message ReadEventsResponse {
+  string event = 1;
+  string position = 2;
+  string event_pointer = 3;
+  // Empty string if this is not a checkpoint.
+  string checkpoint_name = 4;
+}
+
+message WriteEventsRequest {
+  string scope = 1;
+  string stream = 2;
+  string routing_key = 3;
+  string event = 4;
+}
+
+message WriteEventsResponse {
 }

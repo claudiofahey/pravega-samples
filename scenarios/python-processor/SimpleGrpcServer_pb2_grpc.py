@@ -34,6 +34,16 @@ class SimpleGrpcServerStub(object):
         request_serializer=SimpleGrpcServer__pb2.Test1Request.SerializeToString,
         response_deserializer=SimpleGrpcServer__pb2.Test1Reply.FromString,
         )
+    self.ReadEvents = channel.unary_stream(
+        '/pravega_simple_grpc_server.SimpleGrpcServer/ReadEvents',
+        request_serializer=SimpleGrpcServer__pb2.ReadEventsRequest.SerializeToString,
+        response_deserializer=SimpleGrpcServer__pb2.ReadEventsResponse.FromString,
+        )
+    self.WriteEvents = channel.stream_unary(
+        '/pravega_simple_grpc_server.SimpleGrpcServer/WriteEvents',
+        request_serializer=SimpleGrpcServer__pb2.WriteEventsRequest.SerializeToString,
+        response_deserializer=SimpleGrpcServer__pb2.WriteEventsResponse.FromString,
+        )
 
 
 class SimpleGrpcServerServicer(object):
@@ -68,6 +78,20 @@ class SimpleGrpcServerServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def ReadEvents(self, request, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def WriteEvents(self, request_iterator, context):
+    # missing associated documentation comment in .proto file
+    pass
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
 
 def add_SimpleGrpcServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
@@ -90,6 +114,16 @@ def add_SimpleGrpcServerServicer_to_server(servicer, server):
           servicer.Test4,
           request_deserializer=SimpleGrpcServer__pb2.Test1Request.FromString,
           response_serializer=SimpleGrpcServer__pb2.Test1Reply.SerializeToString,
+      ),
+      'ReadEvents': grpc.unary_stream_rpc_method_handler(
+          servicer.ReadEvents,
+          request_deserializer=SimpleGrpcServer__pb2.ReadEventsRequest.FromString,
+          response_serializer=SimpleGrpcServer__pb2.ReadEventsResponse.SerializeToString,
+      ),
+      'WriteEvents': grpc.stream_unary_rpc_method_handler(
+          servicer.WriteEvents,
+          request_deserializer=SimpleGrpcServer__pb2.WriteEventsRequest.FromString,
+          response_serializer=SimpleGrpcServer__pb2.WriteEventsResponse.SerializeToString,
       ),
   }
   generic_handler = grpc.method_handlers_generic_handler(

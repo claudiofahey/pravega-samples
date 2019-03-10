@@ -10,25 +10,9 @@ class Parameters {
         return URI.create(getEnvVar("PRAVEGA_CONTROLLER", "tcp://localhost:9090"));
     }
 
-//    public static String getScope() {
-//        return getEnvVar("PRAVEGA_SCOPE", "taxidemo");
-//    }
-//
-//    public static String getStreamName() {
-//        return getEnvVar("PRAVEGA_STREAM", "data");
-//    }
-//
-//    public static int getTargetRateEventsPerSec() {
-//        return Integer.parseInt(getEnvVar("PRAVEGA_TARGET_RATE_EVENTS_PER_SEC", "100"));
-//    }
-//
-//    public static int getScaleFactor() {
-//        return Integer.parseInt(getEnvVar("PRAVEGA_SCALE_FACTOR", "2"));
-//    }
-//
-//    public static int getMinNumSegments() {
-//        return Integer.parseInt(getEnvVar("PRAVEGA_MIN_NUM_SEGMENTS", "1"));
-//    }
+    public static int getListenPort() {
+        return Integer.parseInt(getEnvVar("LISTEN_PORT", "50051"));
+    }
 
     private static String getEnvVar(String name, String defaultValue) {
         String value = System.getenv(name);

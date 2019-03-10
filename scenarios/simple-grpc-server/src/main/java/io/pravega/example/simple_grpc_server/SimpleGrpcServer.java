@@ -9,8 +9,6 @@ import io.pravega.client.admin.ReaderGroupManager;
 import io.pravega.client.admin.StreamManager;
 import io.pravega.client.stream.*;
 import io.pravega.client.stream.impl.ByteBufferSerializer;
-import io.pravega.client.stream.impl.JavaSerializer;
-import io.pravega.client.stream.impl.UTF8StringSerializer;
 
 import java.io.IOException;
 import java.net.URI;
@@ -29,8 +27,7 @@ public class SimpleGrpcServer {
     private Server server;
 
     private void start() throws IOException {
-        /* The port on which the server should run */
-        int port = 50051;
+        int port = Parameters.getListenPort();
         server = ServerBuilder.forPort(port)
                 .addService(new SimpleGrpcServerImpl())
                 .build()
@@ -94,7 +91,6 @@ public class SimpleGrpcServer {
 
         @Override
         public void readEvents(ReadEventsRequest req, StreamObserver<ReadEventsResponse> responseObserver) {
-            final int READER_TIMEOUT_MS = 2000;
             final URI controllerURI = Parameters.getControllerURI();
             final String scope = req.getScope();
             final String streamName = req.getStream();
@@ -112,10 +108,9 @@ public class SimpleGrpcServer {
                          readerGroup,
                          new ByteBufferSerializer(),
                          ReaderConfig.builder().build())) {
-                System.out.format("Reading all the events from %s/%s%n", scope, streamName);
-                for (; ; ) {
+                for (;;) {
                     try {
-                        EventRead<ByteBuffer> event = reader.readNextEvent(READER_TIMEOUT_MS);
+                        EventRead<ByteBuffer> event = reader.readNextEvent(req.getTimeoutMs());
                         if (event.isCheckpoint()) {
                             ReadEventsResponse response = ReadEventsResponse.newBuilder()
                                     .setCheckpointName(event.getCheckpointName())
@@ -131,15 +126,19 @@ public class SimpleGrpcServer {
                             logger.info("readEvents: response=" + response.toString());
                             responseObserver.onNext(response);
                         } else {
+                            // If this is a bounded stream with an end stream cut, then we
+                            // have reached the end stream cut.
+                            // If this is an unbounded stream, all events have been read and a
+                            // timeout has occurred.
+                            logger.info("readEvents: no more events, completing RPC");
                             break;
                         }
                     } catch (ReinitializationRequiredException e) {
                         // There are certain circumstances where the reader needs to be reinitialized
-                        e.printStackTrace();
-                        // TODO: Handle this error
+                        logger.warning(e.toString());
+                        responseObserver.onError(e);
                     }
                 }
-                System.out.format("No more events from %s/%s%n", scope, streamName);
             }
 
             responseObserver.onCompleted();
@@ -155,6 +154,8 @@ public class SimpleGrpcServer {
                 public void onNext(WriteEventsRequest req) {
                     logger.info("writeEvents: req=" + req.toString());
                     if (writer == null) {
+                        // The scope and stream are set based on the first request only.
+                        // TODO: Check or remove this restriction.
                         final URI controllerURI = Parameters.getControllerURI();
                         final String scope = req.getScope();
                         final String streamName = req.getStream();
@@ -165,21 +166,32 @@ public class SimpleGrpcServer {
                                 EventWriterConfig.builder().build());
                     }
                     final CompletableFuture writeFuture = writer.writeEvent(req.getRoutingKey(), req.getEvent().asReadOnlyByteBuffer());
-                    // Wait for acknowledgement that the event was durably persisted.
-                    // TODO: Wait should be an option that can be set by each request.
-//                    writeFuture.get();
-
                 }
 
                 @Override
                 public void onError(Throwable t) {
                     logger.log(Level.WARNING, "Encountered error in writeEvents", t);
+                    if (writer != null) {
+                        writer.close();
+                        writer = null;
+                    }
+                    if (clientFactory != null) {
+                        clientFactory.close();
+                        clientFactory = null;
+                    }
                 }
 
                 @Override
                 public void onCompleted() {
-                    writer.close();
-                    clientFactory.close();
+                    if (writer != null) {
+                        // Flush and close writer.
+                        writer.close();
+                        writer = null;
+                    }
+                    if (clientFactory != null) {
+                        clientFactory.close();
+                        clientFactory = null;
+                    }
                     WriteEventsResponse response = WriteEventsResponse.newBuilder()
                             .build();
                     logger.info("writeEvents: response=" + response.toString());

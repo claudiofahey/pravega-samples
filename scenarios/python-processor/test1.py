@@ -1,10 +1,5 @@
-"""The Python implementation of the GRPC helloworld.Greeter client."""
-
-from __future__ import print_function
 import logging
-
 import grpc
-
 import SimpleGrpcServer_pb2
 import SimpleGrpcServer_pb2_grpc
 
@@ -17,22 +12,24 @@ def run():
         stream = 'stream1'
 
         response = stub.CreateScope(SimpleGrpcServer_pb2.CreateScopeRequest(scope=scope))
-        print('CreateScope response=%s' % response)
+        logging.info('CreateScope response=%s' % response)
         response = stub.CreateStream(SimpleGrpcServer_pb2.CreateStreamRequest(scope=scope, stream=stream))
-        print('CreateStream response=%s' % response)
+        logging.info('CreateStream response=%s' % response)
 
         events_to_write = [
             SimpleGrpcServer_pb2.WriteEventsRequest(scope=scope, stream=stream, event='write1'.encode(encoding='UTF-8')),
             SimpleGrpcServer_pb2.WriteEventsRequest(scope=scope, stream=stream, event='write2'.encode(encoding='UTF-8')),
             ]
+        logging.info("events_to_write=%s", events_to_write);
         write_response = stub.WriteEvents(iter(events_to_write))
-        print("write_response=" + str(write_response))
+        logging.info("write_response=" + str(write_response))
 
-        for r in stub.ReadEvents(SimpleGrpcServer_pb2.ReadEventsRequest(scope=scope, stream=stream)):
+        for r in stub.ReadEvents(SimpleGrpcServer_pb2.ReadEventsRequest(
+                scope=scope, stream=stream, timeout_ms=3000)):
             event_string = r.event.decode(encoding='UTF-8')
-            print('ReadEvents: event=%s, event_string=%s, response=%s' % (r.event, event_string, str(r)))
+            logging.info('ReadEvents: event_string=%s, response=%s' % (event_string, str(r)))
 
 
 if __name__ == '__main__':
-    logging.basicConfig()
+    logging.basicConfig(level=logging.DEBUG)
     run()

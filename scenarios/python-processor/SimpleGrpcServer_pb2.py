@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='pravega_simple_grpc_server',
   syntax='proto3',
   serialized_options=_b('\n%io.pravega.example.simple_grpc_serverB\025SimpleGrpcServerProtoP\001\242\002\004PSGS'),
-  serialized_pb=_b('\n\x16SimpleGrpcServer.proto\x12\x1apravega_simple_grpc_server\"#\n\x12\x43reateScopeRequest\x12\r\n\x05scope\x18\x01 \x01(\t\"&\n\x13\x43reateScopeResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\"4\n\x13\x43reateStreamRequest\x12\r\n\x05scope\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\"\'\n\x14\x43reateStreamResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\"2\n\x11ReadEventsRequest\x12\r\n\x05scope\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\"e\n\x12ReadEventsResponse\x12\r\n\x05\x65vent\x18\x01 \x01(\x0c\x12\x10\n\x08position\x18\x02 \x01(\t\x12\x15\n\revent_pointer\x18\x03 \x01(\t\x12\x17\n\x0f\x63heckpoint_name\x18\x04 \x01(\t\"W\n\x12WriteEventsRequest\x12\r\n\x05\x65vent\x18\x01 \x01(\x0c\x12\r\n\x05scope\x18\x02 \x01(\t\x12\x0e\n\x06stream\x18\x03 \x01(\t\x12\x13\n\x0brouting_key\x18\x04 \x01(\t\"\x15\n\x13WriteEventsResponse2\xde\x03\n\x10SimpleGrpcServer\x12p\n\x0b\x43reateScope\x12..pravega_simple_grpc_server.CreateScopeRequest\x1a/.pravega_simple_grpc_server.CreateScopeResponse\"\x00\x12s\n\x0c\x43reateStream\x12/.pravega_simple_grpc_server.CreateStreamRequest\x1a\x30.pravega_simple_grpc_server.CreateStreamResponse\"\x00\x12o\n\nReadEvents\x12-.pravega_simple_grpc_server.ReadEventsRequest\x1a..pravega_simple_grpc_server.ReadEventsResponse\"\x00\x30\x01\x12r\n\x0bWriteEvents\x12..pravega_simple_grpc_server.WriteEventsRequest\x1a/.pravega_simple_grpc_server.WriteEventsResponse\"\x00(\x01\x42G\n%io.pravega.example.simple_grpc_serverB\x15SimpleGrpcServerProtoP\x01\xa2\x02\x04PSGSb\x06proto3')
+  serialized_pb=_b('\n\x16SimpleGrpcServer.proto\x12\x1apravega_simple_grpc_server\"#\n\x12\x43reateScopeRequest\x12\r\n\x05scope\x18\x01 \x01(\t\"&\n\x13\x43reateScopeResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\"4\n\x13\x43reateStreamRequest\x12\r\n\x05scope\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\"\'\n\x14\x43reateStreamResponse\x12\x0f\n\x07\x63reated\x18\x01 \x01(\x08\"F\n\x11ReadEventsRequest\x12\r\n\x05scope\x18\x01 \x01(\t\x12\x0e\n\x06stream\x18\x02 \x01(\t\x12\x12\n\ntimeout_ms\x18\x03 \x01(\x03\"e\n\x12ReadEventsResponse\x12\r\n\x05\x65vent\x18\x01 \x01(\x0c\x12\x10\n\x08position\x18\x02 \x01(\t\x12\x15\n\revent_pointer\x18\x03 \x01(\t\x12\x17\n\x0f\x63heckpoint_name\x18\x04 \x01(\t\"W\n\x12WriteEventsRequest\x12\r\n\x05\x65vent\x18\x01 \x01(\x0c\x12\r\n\x05scope\x18\x02 \x01(\t\x12\x0e\n\x06stream\x18\x03 \x01(\t\x12\x13\n\x0brouting_key\x18\x04 \x01(\t\"\x15\n\x13WriteEventsResponse2\xde\x03\n\x10SimpleGrpcServer\x12p\n\x0b\x43reateScope\x12..pravega_simple_grpc_server.CreateScopeRequest\x1a/.pravega_simple_grpc_server.CreateScopeResponse\"\x00\x12s\n\x0c\x43reateStream\x12/.pravega_simple_grpc_server.CreateStreamRequest\x1a\x30.pravega_simple_grpc_server.CreateStreamResponse\"\x00\x12o\n\nReadEvents\x12-.pravega_simple_grpc_server.ReadEventsRequest\x1a..pravega_simple_grpc_server.ReadEventsResponse\"\x00\x30\x01\x12r\n\x0bWriteEvents\x12..pravega_simple_grpc_server.WriteEventsRequest\x1a/.pravega_simple_grpc_server.WriteEventsResponse\"\x00(\x01\x42G\n%io.pravega.example.simple_grpc_serverB\x15SimpleGrpcServerProtoP\x01\xa2\x02\x04PSGSb\x06proto3')
 )
 
 
@@ -177,6 +177,13 @@ _READEVENTSREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='timeout_ms', full_name='pravega_simple_grpc_server.ReadEventsRequest.timeout_ms', index=2,
+      number=3, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -190,7 +197,7 @@ _READEVENTSREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=226,
-  serialized_end=276,
+  serialized_end=296,
 )
 
 
@@ -241,8 +248,8 @@ _READEVENTSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=278,
-  serialized_end=379,
+  serialized_start=298,
+  serialized_end=399,
 )
 
 
@@ -293,8 +300,8 @@ _WRITEEVENTSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=381,
-  serialized_end=468,
+  serialized_start=401,
+  serialized_end=488,
 )
 
 
@@ -317,8 +324,8 @@ _WRITEEVENTSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=470,
-  serialized_end=491,
+  serialized_start=490,
+  serialized_end=511,
 )
 
 DESCRIPTOR.message_types_by_name['CreateScopeRequest'] = _CREATESCOPEREQUEST
@@ -396,8 +403,8 @@ _SIMPLEGRPCSERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=494,
-  serialized_end=972,
+  serialized_start=514,
+  serialized_end=992,
   methods=[
   _descriptor.MethodDescriptor(
     name='CreateScope',

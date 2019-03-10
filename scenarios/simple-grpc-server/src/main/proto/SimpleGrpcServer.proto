@@ -35,6 +35,7 @@ message CreateStreamResponse {
 message ReadEventsRequest {
   string scope = 1;
   string stream = 2;
+  int64 timeout_ms = 3;
 }
 
 message ReadEventsResponse {

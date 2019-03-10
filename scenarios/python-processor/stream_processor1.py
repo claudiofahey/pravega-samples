@@ -8,7 +8,7 @@ def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = SimpleGrpcServer_pb2_grpc.SimpleGrpcServerStub(channel)
 
-        scope = 'examples3'
+        scope = 'examples4'
         input_stream = 'stream1'
         output_stream = 'stream2'
 
@@ -23,21 +23,24 @@ def run():
                 scope=scope, stream=input_stream, timeout_ms=2**63-1)
         logging.info('read_events_request=%s', read_events_request)
         for r in stub.ReadEvents(read_events_request):
-            input_event_string = r.event.decode(encoding='UTF-8')
-            logging.info('ReadEvents: input_event_string=%s, response=%s' % (input_event_string, str(r)))
+            logging.info('ReadEvents: response=%s' % str(r))
 
             # Process event
-            output_event_string = 'processed: ' + input_event_string
+            if len(r.event) > 0:
+                input_event_string = r.event.decode(encoding='UTF-8')
+                output_event_string = 'processed: ' + input_event_string
 
-            # Write output event
-            events_to_write = [
-                SimpleGrpcServer_pb2.WriteEventsRequest(
-                    scope=scope, stream=output_stream, event=output_event_string.encode(encoding='UTF-8')),
-                ]
-            logging.info("events_to_write=%s", events_to_write);
-            write_response = stub.WriteEvents(iter(events_to_write))
-            logging.info("write_response=" + str(write_response))
-            # Output event is guaranteed to have been durably written.
+                # Write output event
+                events_to_write = [
+                    SimpleGrpcServer_pb2.WriteEventsRequest(
+                        scope=scope, stream=output_stream, event=output_event_string.encode(encoding='UTF-8')),
+                    ]
+                logging.info("events_to_write=%s", events_to_write);
+                write_response = stub.WriteEvents(iter(events_to_write))
+                logging.info("write_response=" + str(write_response))
+                # Output event is guaranteed to have been durably written.
+
+                break
 
 
 if __name__ == '__main__':

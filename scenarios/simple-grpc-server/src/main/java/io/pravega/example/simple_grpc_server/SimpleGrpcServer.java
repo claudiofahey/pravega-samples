@@ -1,8 +1,10 @@
 package io.pravega.example.simple_grpc_server;
 
 import com.google.protobuf.ByteString;
+import io.grpc.Context;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
+import io.grpc.Status;
 import io.grpc.stub.StreamObserver;
 import io.pravega.client.ClientFactory;
 import io.pravega.client.admin.ReaderGroupManager;
@@ -90,6 +92,7 @@ public class SimpleGrpcServer {
         }
 
         @Override
+        // TODO: How to detect when caller aborts the RPC?
         public void readEvents(ReadEventsRequest req, StreamObserver<ReadEventsResponse> responseObserver) {
             final URI controllerURI = Parameters.getControllerURI();
             final String scope = req.getScope();
@@ -133,10 +136,17 @@ public class SimpleGrpcServer {
                             logger.info("readEvents: no more events, completing RPC");
                             break;
                         }
+
+                        if (Context.current().isCancelled()) {
+                            logger.warning("context cancelled");
+                            responseObserver.onError(Status.CANCELLED.asRuntimeException());
+                            return;
+                        }
                     } catch (ReinitializationRequiredException e) {
                         // There are certain circumstances where the reader needs to be reinitialized
                         logger.warning(e.toString());
                         responseObserver.onError(e);
+                        return;
                     }
                 }
             }

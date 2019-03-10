@@ -10,7 +10,7 @@ def run():
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = SimpleGrpcServer_pb2_grpc.SimpleGrpcServerStub(channel)
 
-        scope = 'examples3'
+        scope = 'examples4'
         stream = 'stream1'
 
         response = stub.CreateScope(SimpleGrpcServer_pb2.CreateScopeRequest(scope=scope))

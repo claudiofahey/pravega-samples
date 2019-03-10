@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -147,20 +148,27 @@ public class SimpleGrpcServer {
         @Override
         public StreamObserver<WriteEventsRequest> writeEvents(StreamObserver<WriteEventsResponse> responseObserver) {
             return new StreamObserver<WriteEventsRequest>() {
+                ClientFactory clientFactory;
+                EventStreamWriter<ByteBuffer> writer;
+
                 @Override
                 public void onNext(WriteEventsRequest req) {
                     logger.info("writeEvents: req=" + req.toString());
-                    final URI controllerURI = Parameters.getControllerURI();
-                    final String scope = req.getScope();
-                    final String streamName = req.getStream();
-
-                    try (ClientFactory clientFactory = ClientFactory.withScope(scope, controllerURI);
-                         EventStreamWriter<ByteBuffer> writer = clientFactory.createEventWriter(
-                                 streamName,
-                                 new ByteBufferSerializer(),
-                                 EventWriterConfig.builder().build())) {
-                        writer.writeEvent(req.getRoutingKey(), req.getEvent().asReadOnlyByteBuffer());
+                    if (writer == null) {
+                        final URI controllerURI = Parameters.getControllerURI();
+                        final String scope = req.getScope();
+                        final String streamName = req.getStream();
+                        clientFactory = ClientFactory.withScope(scope, controllerURI);
+                        writer = clientFactory.createEventWriter(
+                                streamName,
+                                new ByteBufferSerializer(),
+                                EventWriterConfig.builder().build());
                     }
+                    final CompletableFuture writeFuture = writer.writeEvent(req.getRoutingKey(), req.getEvent().asReadOnlyByteBuffer());
+                    // Wait for acknowledgement that the event was durably persisted.
+                    // TODO: Wait should be an option that can be set by each request.
+//                    writeFuture.get();
+
                 }
 
                 @Override
@@ -170,6 +178,8 @@ public class SimpleGrpcServer {
 
                 @Override
                 public void onCompleted() {
+                    writer.close();
+                    clientFactory.close();
                     WriteEventsResponse response = WriteEventsResponse.newBuilder()
                             .build();
                     logger.info("writeEvents: response=" + response.toString());

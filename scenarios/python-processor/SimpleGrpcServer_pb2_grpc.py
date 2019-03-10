@@ -14,25 +14,15 @@ class SimpleGrpcServerStub(object):
     Args:
       channel: A grpc.Channel.
     """
-    self.Test1 = channel.unary_unary(
-        '/pravega_simple_grpc_server.SimpleGrpcServer/Test1',
-        request_serializer=SimpleGrpcServer__pb2.Test1Request.SerializeToString,
-        response_deserializer=SimpleGrpcServer__pb2.Test1Reply.FromString,
+    self.CreateScope = channel.unary_unary(
+        '/pravega_simple_grpc_server.SimpleGrpcServer/CreateScope',
+        request_serializer=SimpleGrpcServer__pb2.CreateScopeRequest.SerializeToString,
+        response_deserializer=SimpleGrpcServer__pb2.CreateScopeResponse.FromString,
         )
-    self.Test2 = channel.unary_unary(
-        '/pravega_simple_grpc_server.SimpleGrpcServer/Test2',
-        request_serializer=SimpleGrpcServer__pb2.Test1Request.SerializeToString,
-        response_deserializer=SimpleGrpcServer__pb2.Test1Reply.FromString,
-        )
-    self.Test3 = channel.unary_stream(
-        '/pravega_simple_grpc_server.SimpleGrpcServer/Test3',
-        request_serializer=SimpleGrpcServer__pb2.Test1Request.SerializeToString,
-        response_deserializer=SimpleGrpcServer__pb2.Test1Reply.FromString,
-        )
-    self.Test4 = channel.unary_stream(
-        '/pravega_simple_grpc_server.SimpleGrpcServer/Test4',
-        request_serializer=SimpleGrpcServer__pb2.Test1Request.SerializeToString,
-        response_deserializer=SimpleGrpcServer__pb2.Test1Reply.FromString,
+    self.CreateStream = channel.unary_unary(
+        '/pravega_simple_grpc_server.SimpleGrpcServer/CreateStream',
+        request_serializer=SimpleGrpcServer__pb2.CreateStreamRequest.SerializeToString,
+        response_deserializer=SimpleGrpcServer__pb2.CreateStreamResponse.FromString,
         )
     self.ReadEvents = channel.unary_stream(
         '/pravega_simple_grpc_server.SimpleGrpcServer/ReadEvents',
@@ -50,28 +40,14 @@ class SimpleGrpcServerServicer(object):
   # missing associated documentation comment in .proto file
   pass
 
-  def Test1(self, request, context):
+  def CreateScope(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def Test2(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def Test3(self, request, context):
-    # missing associated documentation comment in .proto file
-    pass
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-  def Test4(self, request, context):
+  def CreateStream(self, request, context):
     # missing associated documentation comment in .proto file
     pass
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -95,25 +71,15 @@ class SimpleGrpcServerServicer(object):
 
 def add_SimpleGrpcServerServicer_to_server(servicer, server):
   rpc_method_handlers = {
-      'Test1': grpc.unary_unary_rpc_method_handler(
-          servicer.Test1,
-          request_deserializer=SimpleGrpcServer__pb2.Test1Request.FromString,
-          response_serializer=SimpleGrpcServer__pb2.Test1Reply.SerializeToString,
+      'CreateScope': grpc.unary_unary_rpc_method_handler(
+          servicer.CreateScope,
+          request_deserializer=SimpleGrpcServer__pb2.CreateScopeRequest.FromString,
+          response_serializer=SimpleGrpcServer__pb2.CreateScopeResponse.SerializeToString,
       ),
-      'Test2': grpc.unary_unary_rpc_method_handler(
-          servicer.Test2,
-          request_deserializer=SimpleGrpcServer__pb2.Test1Request.FromString,
-          response_serializer=SimpleGrpcServer__pb2.Test1Reply.SerializeToString,
-      ),
-      'Test3': grpc.unary_stream_rpc_method_handler(
-          servicer.Test3,
-          request_deserializer=SimpleGrpcServer__pb2.Test1Request.FromString,
-          response_serializer=SimpleGrpcServer__pb2.Test1Reply.SerializeToString,
-      ),
-      'Test4': grpc.unary_stream_rpc_method_handler(
-          servicer.Test4,
-          request_deserializer=SimpleGrpcServer__pb2.Test1Request.FromString,
-          response_serializer=SimpleGrpcServer__pb2.Test1Reply.SerializeToString,
+      'CreateStream': grpc.unary_unary_rpc_method_handler(
+          servicer.CreateStream,
+          request_deserializer=SimpleGrpcServer__pb2.CreateStreamRequest.FromString,
+          response_serializer=SimpleGrpcServer__pb2.CreateStreamResponse.SerializeToString,
       ),
       'ReadEvents': grpc.unary_stream_rpc_method_handler(
           servicer.ReadEvents,

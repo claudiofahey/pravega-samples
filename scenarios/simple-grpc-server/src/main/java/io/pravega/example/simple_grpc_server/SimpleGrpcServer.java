@@ -73,140 +73,21 @@ public class SimpleGrpcServer {
     static class SimpleGrpcServerImpl extends SimpleGrpcServerGrpc.SimpleGrpcServerImplBase {
 
         @Override
-        public void test1(Test1Request req, StreamObserver<Test1Reply> responseObserver) {
-            Test1Reply reply = Test1Reply.newBuilder().setMessage("Hello " + req.getName()).build();
-            responseObserver.onNext(reply);
+        public void createScope(CreateScopeRequest req, StreamObserver<CreateScopeResponse> responseObserver) {
+            StreamManager streamManager = StreamManager.create(Parameters.getControllerURI());
+            boolean created = streamManager.createScope(req.getScope());
+            responseObserver.onNext(CreateScopeResponse.newBuilder().setCreated(created).build());
             responseObserver.onCompleted();
         }
 
         @Override
-        public void test2(Test1Request req, StreamObserver<Test1Reply> responseObserver) {
-
-            final int READER_TIMEOUT_MS = 2000;
-            final String scope = "examples";
-            final String streamName = "helloStream";
-            final URI controllerURI = Parameters.getControllerURI();
-
-            StreamManager streamManager = StreamManager.create(controllerURI);
-
-            final boolean scopeIsNew = streamManager.createScope(scope);
+        public void createStream(CreateStreamRequest req, StreamObserver<CreateStreamResponse> responseObserver) {
+            StreamManager streamManager = StreamManager.create(Parameters.getControllerURI());
             StreamConfiguration streamConfig = StreamConfiguration.builder()
                     .scalingPolicy(ScalingPolicy.fixed(1))
                     .build();
-            final boolean streamIsNew = streamManager.createStream(scope, streamName, streamConfig);
-
-            final String readerGroup = UUID.randomUUID().toString().replace("-", "");
-            final ReaderGroupConfig readerGroupConfig = ReaderGroupConfig.builder()
-                    .stream(Stream.of(scope, streamName))
-                    .build();
-            try (ReaderGroupManager readerGroupManager = ReaderGroupManager.withScope(scope, controllerURI)) {
-                readerGroupManager.createReaderGroup(readerGroup, readerGroupConfig);
-            }
-            String message = "no message";
-
-            try (ClientFactory clientFactory = ClientFactory.withScope(scope, controllerURI);
-                 EventStreamReader<String> reader = clientFactory.createReader("reader",
-                         readerGroup,
-                         new JavaSerializer<String>(),
-                         ReaderConfig.builder().build())) {
-                System.out.format("Reading all the events from %s/%s%n", scope, streamName);
-                EventRead<String> event = null;
-                do {
-                    try {
-                        event = reader.readNextEvent(READER_TIMEOUT_MS);
-                        if (event.getEvent() != null) {
-                            System.out.format("Read event '%s'%n", event.getEvent());
-                            message = event.getEvent();
-                        }
-                    } catch (ReinitializationRequiredException e) {
-                        //There are certain circumstances where the reader needs to be reinitialized
-                        e.printStackTrace();
-                    }
-                } while (event.getEvent() != null);
-                System.out.format("No more events from %s/%s%n", scope, streamName);
-            }
-
-            Test1Reply reply = Test1Reply.newBuilder().setMessage("Hello " + req.getName() + ", message=" + message).build();
-            responseObserver.onNext(reply);
-            responseObserver.onCompleted();
-        }
-
-//    @Override
-//    public StreamObserver<Test1Request> test31(StreamObserver<Test1Reply> responseObserver) {
-//      return new StreamObserver<Test1Request>() {
-//        @Override
-//        public void onNext(Test1Request req) {
-//          Test1Reply reply = Test1Reply.newBuilder().setMessage("Hello " + req.getName()).build();
-//          responseObserver.onNext(reply);
-//          responseObserver.onCompleted();
-//        }
-//
-//        @Override
-//        public void onError(Throwable t) {
-//          logger.log(Level.WARNING, "Encountered error", t);
-//        }
-//
-//        @Override
-//        public void onCompleted() {
-//          responseObserver.onCompleted();
-//        }
-//      };
-//    }
-
-        @Override
-        public void test3(Test1Request req, StreamObserver<Test1Reply> responseObserver) {
-            Test1Reply reply = Test1Reply.newBuilder().setMessage("Hello " + req.getName()).build();
-            responseObserver.onNext(reply);
-            responseObserver.onNext(reply);
-            responseObserver.onCompleted();
-        }
-
-        @Override
-        public void test4(Test1Request req, StreamObserver<Test1Reply> responseObserver) {
-            final int READER_TIMEOUT_MS = 2000;
-            final String scope = "examples";
-            final String streamName = "helloStream";
-            final URI controllerURI = Parameters.getControllerURI();
-
-            StreamManager streamManager = StreamManager.create(controllerURI);
-
-            final boolean scopeIsNew = streamManager.createScope(scope);
-            StreamConfiguration streamConfig = StreamConfiguration.builder()
-                    .scalingPolicy(ScalingPolicy.fixed(1))
-                    .build();
-            final boolean streamIsNew = streamManager.createStream(scope, streamName, streamConfig);
-
-            final String readerGroup = UUID.randomUUID().toString().replace("-", "");
-            final ReaderGroupConfig readerGroupConfig = ReaderGroupConfig.builder()
-                    .stream(Stream.of(scope, streamName))
-                    .build();
-            try (ReaderGroupManager readerGroupManager = ReaderGroupManager.withScope(scope, controllerURI)) {
-                readerGroupManager.createReaderGroup(readerGroup, readerGroupConfig);
-            }
-            try (ClientFactory clientFactory = ClientFactory.withScope(scope, controllerURI);
-                 EventStreamReader<String> reader = clientFactory.createReader("reader",
-                         readerGroup,
-                         new JavaSerializer<String>(),
-                         ReaderConfig.builder().build())) {
-                System.out.format("Reading all the events from %s/%s%n", scope, streamName);
-                EventRead<String> event = null;
-                do {
-                    try {
-                        event = reader.readNextEvent(READER_TIMEOUT_MS);
-                        if (event.getEvent() != null) {
-                            System.out.format("Read event '%s'%n", event.getEvent());
-                            Test1Reply reply = Test1Reply.newBuilder().setMessage("Hello " + req.getName() + ", message=" + event.getEvent()).build();
-                            responseObserver.onNext(reply);
-
-                        }
-                    } catch (ReinitializationRequiredException e) {
-                        //There are certain circumstances where the reader needs to be reinitialized
-                        e.printStackTrace();
-                    }
-                } while (event.getEvent() != null);
-                System.out.format("No more events from %s/%s%n", scope, streamName);
-            }
-
+            boolean created = streamManager.createStream(req.getScope(), req.getStream(), streamConfig);
+            responseObserver.onNext(CreateStreamResponse.newBuilder().setCreated(created).build());
             responseObserver.onCompleted();
         }
 
@@ -216,13 +97,6 @@ public class SimpleGrpcServer {
             final URI controllerURI = Parameters.getControllerURI();
             final String scope = req.getScope();
             final String streamName = req.getStream();
-
-            StreamManager streamManager = StreamManager.create(controllerURI);
-            streamManager.createScope(scope);
-            StreamConfiguration streamConfig = StreamConfiguration.builder()
-                    .scalingPolicy(ScalingPolicy.fixed(1))
-                    .build();
-            streamManager.createStream(scope, streamName, streamConfig);
 
             final String readerGroup = UUID.randomUUID().toString().replace("-", "");
             final ReaderGroupConfig readerGroupConfig = ReaderGroupConfig.builder()
@@ -261,6 +135,7 @@ public class SimpleGrpcServer {
                     } catch (ReinitializationRequiredException e) {
                         // There are certain circumstances where the reader needs to be reinitialized
                         e.printStackTrace();
+                        // TODO: Handle this error
                     }
                 }
                 System.out.format("No more events from %s/%s%n", scope, streamName);
@@ -278,13 +153,6 @@ public class SimpleGrpcServer {
                     final URI controllerURI = Parameters.getControllerURI();
                     final String scope = req.getScope();
                     final String streamName = req.getStream();
-
-                    StreamManager streamManager = StreamManager.create(controllerURI);
-                    streamManager.createScope(scope);
-                    StreamConfiguration streamConfig = StreamConfiguration.builder()
-                            .scalingPolicy(ScalingPolicy.fixed(1))
-                            .build();
-                    streamManager.createStream(scope, streamName, streamConfig);
 
                     try (ClientFactory clientFactory = ClientFactory.withScope(scope, controllerURI);
                          EventStreamWriter<ByteBuffer> writer = clientFactory.createEventWriter(

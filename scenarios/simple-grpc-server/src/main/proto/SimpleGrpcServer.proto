@@ -8,20 +8,28 @@ option objc_class_prefix = "PSGS";
 package pravega_simple_grpc_server;
 
 service SimpleGrpcServer {
-  rpc Test1 (Test1Request) returns (Test1Reply) {}
-  rpc Test2 (Test1Request) returns (Test1Reply) {}
-  rpc Test3 (Test1Request) returns (stream Test1Reply) {}
-  rpc Test4 (Test1Request) returns (stream Test1Reply) {}
-  rpc ReadEvents (ReadEventsRequest) returns (stream ReadEventsResponse) {}
-  rpc WriteEvents (stream WriteEventsRequest) returns (WriteEventsResponse) {}
+  rpc CreateScope(CreateScopeRequest) returns (CreateScopeResponse) {}
+  rpc CreateStream(CreateStreamRequest) returns (CreateStreamResponse) {}
+  rpc ReadEvents(ReadEventsRequest) returns (stream ReadEventsResponse) {}
+  rpc WriteEvents(stream WriteEventsRequest) returns (WriteEventsResponse) {}
 }
 
-message Test1Request {
-  string name = 1;
+message CreateScopeRequest {
+  string scope = 1;
 }
 
-message Test1Reply {
-  string message = 1;
+message CreateScopeResponse {
+  bool created = 1;
+}
+
+message CreateStreamRequest {
+  string scope = 1;
+  string stream = 2;
+  // TODO: scaling policy, etc.
+}
+
+message CreateStreamResponse {
+  bool created = 1;
 }
 
 message ReadEventsRequest {

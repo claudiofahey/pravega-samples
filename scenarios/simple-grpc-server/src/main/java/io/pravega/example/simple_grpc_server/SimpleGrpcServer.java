@@ -92,7 +92,6 @@ public class SimpleGrpcServer {
         }
 
         @Override
-        // TODO: How to detect when caller aborts the RPC?
         public void readEvents(ReadEventsRequest req, StreamObserver<ReadEventsResponse> responseObserver) {
             final URI controllerURI = Parameters.getControllerURI();
             final String scope = req.getScope();

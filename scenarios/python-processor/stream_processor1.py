@@ -40,8 +40,6 @@ def run():
                 logging.info("write_response=" + str(write_response))
                 # Output event is guaranteed to have been durably written.
 
-                break
-
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)

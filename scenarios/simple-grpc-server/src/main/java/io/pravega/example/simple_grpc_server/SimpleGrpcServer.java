@@ -112,6 +112,7 @@ public class SimpleGrpcServer {
                          ReaderConfig.builder().build())) {
                 for (;;) {
                     try {
+                        // TODO: must be able to handle cancellation from client even if there are no events coming in. Perhaps reduce below timeout to 1 sec.
                         EventRead<ByteBuffer> event = reader.readNextEvent(req.getTimeoutMs());
                         if (event.isCheckpoint()) {
                             ReadEventsResponse response = ReadEventsResponse.newBuilder()

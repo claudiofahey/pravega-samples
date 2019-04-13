@@ -2,12 +2,11 @@ syntax = "proto3";
 
 option java_multiple_files = true;
 option java_package = "io.pravega.example.simple_grpc_server";
-option java_outer_classname = "SimpleGrpcServerProto";
-option objc_class_prefix = "PSGS";
+//option java_outer_classname = "PravegaServerProto";
+//option objc_class_prefix = "PS";
+//package pravega_simple_grpc_server;
 
-package pravega_simple_grpc_server;
-
-service SimpleGrpcServer {
+service PravegaServer {
   rpc CreateScope(CreateScopeRequest) returns (CreateScopeResponse) {}
   rpc CreateStream(CreateStreamRequest) returns (CreateStreamResponse) {}
   rpc ReadEvents(ReadEventsRequest) returns (stream ReadEventsResponse) {}

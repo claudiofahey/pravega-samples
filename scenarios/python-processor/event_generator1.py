@@ -1,26 +1,29 @@
+#!/usr/bin/env python
+
 import logging
 import datetime
 import time
 import grpc
-import SimpleGrpcServer_pb2
-import SimpleGrpcServer_pb2_grpc
+import pravega
+# from pravega.grpc import SimpleGrpcServerStub
+# from pravega.pb import CreateScopeRequest, CreateStreamRequest, WriteEventsRequest, SimpleGrpcServerStub
 
 
 def run():
     with grpc.insecure_channel('localhost:50051') as channel:
-        stub = SimpleGrpcServer_pb2_grpc.SimpleGrpcServerStub(channel)
+        stub = pravega.grpc.PravegaServerStub(channel)
 
         scope = 'examples4'
         stream = 'stream1'
 
-        response = stub.CreateScope(SimpleGrpcServer_pb2.CreateScopeRequest(scope=scope))
+        response = stub.CreateScope(pravega.pb.CreateScopeRequest(scope=scope))
         logging.info('CreateScope response=%s' % response)
-        response = stub.CreateStream(SimpleGrpcServer_pb2.CreateStreamRequest(scope=scope, stream=stream))
+        response = stub.CreateStream(pravega.pb.CreateStreamRequest(scope=scope, stream=stream))
         logging.info('CreateStream response=%s' % response)
 
         while True:
             events_to_write = [
-                SimpleGrpcServer_pb2.WriteEventsRequest(scope=scope, stream=stream, event=str(datetime.datetime.now()).encode(encoding='UTF-8')),
+                pravega.pb.WriteEventsRequest(scope=scope, stream=stream, event=str(datetime.datetime.now()).encode(encoding='UTF-8')),
                 ]
             logging.info("events_to_write=%s", events_to_write);
             write_response = stub.WriteEvents(iter(events_to_write))

@@ -23,15 +23,15 @@ import java.util.logging.Logger;
 /**
  * Server that manages startup/shutdown of a {@code SimpleGrpcServer} server.
  */
-public class SimpleGrpcServer {
-    private static final Logger logger = Logger.getLogger(SimpleGrpcServer.class.getName());
+public class PravegaServer {
+    private static final Logger logger = Logger.getLogger(PravegaServer.class.getName());
 
     private Server server;
 
     private void start() throws IOException {
         int port = Parameters.getListenPort();
         server = ServerBuilder.forPort(port)
-                .addService(new SimpleGrpcServerImpl())
+                .addService(new PravegaServerImpl())
                 .build()
                 .start();
         logger.info("Server started, listening on " + port);
@@ -40,7 +40,7 @@ public class SimpleGrpcServer {
             public void run() {
                 // Use stderr here since the logger may have been reset by its JVM shutdown hook.
                 System.err.println("*** shutting down gRPC server since JVM is shutting down");
-                SimpleGrpcServer.this.stop();
+                PravegaServer.this.stop();
                 System.err.println("*** server shut down");
             }
         });
@@ -65,12 +65,12 @@ public class SimpleGrpcServer {
      * Main launches the server from the command line.
      */
     public static void main(String[] args) throws IOException, InterruptedException {
-        final SimpleGrpcServer server = new SimpleGrpcServer();
+        final PravegaServer server = new PravegaServer();
         server.start();
         server.blockUntilShutdown();
     }
 
-    static class SimpleGrpcServerImpl extends SimpleGrpcServerGrpc.SimpleGrpcServerImplBase {
+    static class PravegaServerImpl extends PravegaServerGrpc.PravegaServerImplBase {
 
         @Override
         public void createScope(CreateScopeRequest req, StreamObserver<CreateScopeResponse> responseObserver) {

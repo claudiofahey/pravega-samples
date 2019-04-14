@@ -8,10 +8,10 @@ import pravega
 
 
 def run():
-    with grpc.insecure_channel('localhost:50051') as channel:
-        pravega_client = pravega.grpc.PravegaGatewayStub(channel)
+    with grpc.insecure_channel('localhost:50051') as pravega_channel:
+        pravega_client = pravega.grpc.PravegaGatewayStub(pravega_channel)
 
-        scope = 'examples4'
+        scope = 'examples'
         stream = 'stream1'
 
         response = pravega_client.CreateScope(pravega.pb.CreateScopeRequest(scope=scope))

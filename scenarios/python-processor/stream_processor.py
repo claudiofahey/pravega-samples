@@ -6,10 +6,10 @@ import pravega
 
 
 def run():
-    with grpc.insecure_channel('localhost:50051') as channel:
-        pravega_client = pravega.grpc.PravegaGatewayStub(channel)
+    with grpc.insecure_channel('localhost:50051') as pravega_channel:
+        pravega_client = pravega.grpc.PravegaGatewayStub(pravega_channel)
 
-        scope = 'examples4'
+        scope = 'examples'
         input_stream = 'stream1'
         output_stream = 'stream2'
 

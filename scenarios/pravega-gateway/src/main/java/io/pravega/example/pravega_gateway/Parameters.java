@@ -1,4 +1,4 @@
-package io.pravega.example.simple_grpc_server;
+package io.pravega.example.pravega_gateway;
 
 import java.net.URI;
 

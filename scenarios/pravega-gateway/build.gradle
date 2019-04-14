@@ -16,7 +16,7 @@ repositories {
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-mainClassName = "io.pravega.example.simple_grpc_server.SimpleGrpcServer"
+mainClassName = "io.pravega.example.pravega_gateway.PravegaGateway"
 
 ext {
     junitVersion = '4.12'

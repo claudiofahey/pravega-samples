@@ -7,5 +7,6 @@ build/
 *.ipr
 *.iml
 *.iws
+*.mp4
 out/
 .DS_Store

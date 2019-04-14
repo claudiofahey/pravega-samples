@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-set -ex
+set -e
+
+source activate ./env
 
 python -m grpc_tools.protoc \
 -Isrc/main/proto/ \

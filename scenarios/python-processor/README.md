@@ -1,28 +1,25 @@
+# Python Processor
 
-# Create Build Environment
+This contains several Python applications that use the Pravega Gateway to read and write Pravega streams.
 
-Download and install Anaconda 2018.12 for Linux, Python 3.7 version from
-https://www.anaconda.com/distribution/#download-section.
+# Run Instructions
 
-```
-conda env create -f environment.yml
-conda activate pravega-samples
-```
+1. Run the [Pravega Gateway](../pravega-gateway/README.md).
 
-(TODO) Install protoc.
+2. Install [Miniconda Python 3.7](https://docs.conda.io/en/latest/miniconda.html) or
+   [Anaconda Python 3.7](https://www.anaconda.com/distribution/#download-section).
 
-# Other
+3. Create Conda environment.
+    ```
+    ./create_conda_env.sh
+    ```
 
-To create GRPC Stubs:
-```
-conda activate pravega-samples
-./make_protobuf.sh
-```
-
-To create environment.yaml:
-```
-conda env export > environment.yml
-```
+4. Run applications.
+    ```
+    source activate ./env
+    export PYTHONPATH=$PWD/../pravega-gateway/src/main/python
+    ./event_generator.py
+    ```
 
 # See Also
 

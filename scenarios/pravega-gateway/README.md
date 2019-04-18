@@ -1,5 +1,8 @@
 # Pravega Gateway
 
+**NOTE: THIS DIRECTORY IS OBSOLETE. THE CURRENT VERSION OF PRAVEGA-GATEWAY IS IN
+https://github.com/claudiofahey/nautilus-iiot-demo/tree/master/pravega-gateway**.
+
 This is a GRPC server that provides a gateway to a Pravega server.
 It provides **limited** Pravega functionality to any environment that support GRPC, including Python.
 

@@ -196,6 +196,14 @@ task startExactlyOnceMultithreadedProcessor(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
 }
 
+task scriptAtLeastOnceApp(type: CreateStartScripts) {
+    outputDir = file('build/scripts')
+    mainClassName = 'io.pravega.example.streamprocessing.AtLeastOnceApp'
+    applicationName = 'atLeastOnceApp'
+    defaultJvmOpts = ["-Dlogback.configurationFile=file:conf/logback.xml"]
+    classpath = files(jar.archivePath) + sourceSets.main.runtimeClasspath
+}
+
 task startAtLeastOnceApp(type: JavaExec) {
     main = "io.pravega.example.streamprocessing.AtLeastOnceApp"
     classpath = sourceSets.main.runtimeClasspath
@@ -228,6 +236,7 @@ distributions {
                 from project.scriptStreamCutsCli
                 from project.scriptSecureWriter
                 from project.scriptSecureReader
+                from project.scriptAtLeastOnceApp
             }
             into('lib') {
                 from(jar)

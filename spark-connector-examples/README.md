@@ -69,6 +69,7 @@ This will build the Spark Connector and publish it to your local Maven repositor
 cd
 git clone https://github.com/pravega/spark-connectors
 cd spark-connectors
+git checkout r0.8-spark2.4
 ./gradlew install
 ls -lhR ~/.m2/repository/io/pravega/pravega-connectors-spark
 ```
@@ -78,10 +79,11 @@ ls -lhR ~/.m2/repository/io/pravega/pravega-connectors-spark
 #### Run a PySpark batch job that reads events from the file *sample_data.json* and writes to a Pravega stream
 
 ```
+cd ~/pravega-samples/spark-connector-examples
 ./run_pyspark_app.sh src/main/python/batch_file_to_pravega.py
 ```
 
-The file *sample_data.json* has the following conents:
+The file *sample_data.json* has the following contents:
 ```
 {"id": 1, "key": "a", "message": "Hello world."}
 {"id": 2, "key": "b", "message": "Welcome to Pravega!"}
@@ -106,6 +108,7 @@ You should see output similar to the following:
 #### Run a PySpark batch job that reads from a Pravega stream and writes to the console
 
 ```
+cd ~/pravega-samples/spark-connector-examples
 ./run_pyspark_app.sh src/main/python/batch_pravega_to_console.py
 ```
 
@@ -125,6 +128,7 @@ You should see output similar to the following:
 #### Run a PySpark Streaming job that writes generated data to a Pravega stream
 
 ```
+cd ~/pravega-samples/spark-connector-examples
 ./run_pyspark_app.sh src/main/python/stream_generated_data_to_pravega.py
 ```
 
@@ -133,6 +137,7 @@ This job will continue to run and write events until stopped.
 #### Run a PySpark Streaming job that reads from a Pravega stream and writes to the console
 
 ```
+cd ~/pravega-samples/spark-connector-examples
 rm -rf /tmp/spark-checkpoints-stream_pravega_to_console
 ./run_pyspark_app.sh src/main/python/stream_pravega_to_console.py
 ```
@@ -155,6 +160,7 @@ You should see output similar to the following every 3 seconds:
 #### Run a PySpark Streaming job that reads from a Pravega stream and writes to another Pravega stream
 
 ```
+cd ~/pravega-samples/spark-connector-examples
 rm -rf /tmp/spark-checkpoints-stream_pravega_to_pravega
 ./run_spark_app.sh src/main/python/stream_pravega_to_pravega.py
 ```
